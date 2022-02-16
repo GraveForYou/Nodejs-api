@@ -28,6 +28,20 @@
     ],
     "consumes": ["application/json", "application/xml"],
     "produces": ["application/json", "application/xml"],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "apiKey",
+                "scheme": "bearer",
+                "name": "authorization",
+                "in": "header",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
+    "security": [{
+        "bearerAuth": []
+    }],
     "paths": {
         "/api/users": {
             "get": {
@@ -39,6 +53,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
+                                    "type": "array",
                                     "$ref": "#/definitions/Users"
                                 }
                             },
@@ -57,7 +72,10 @@
                         "description": "User not found",
                         "content": {}
                     }
-                }
+                },
+                "security": [{
+                    "bearerAuth": []
+                }]
             }
         },
         "/api/auth/register": {
@@ -65,6 +83,8 @@
                 "tags": ["Users"],
                 "description": "Create new user in system",
                 "requestBody": {
+                    "name": "user",
+                    "in": "body",
                     "description": "User that we want to create",
                     "required": true,
                     "content": {
@@ -202,7 +222,10 @@
                         "description": "User not found",
                         "content": {}
                     }
-                }
+                },
+                "security": [{
+                    "bearerAuth": []
+                }]
             }
         }
     },

@@ -3,13 +3,13 @@ const router = express.Router();
 const { verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin } = require('../middleware/authenticate');
 const userController = require('../controllers/userController');
 
-router.get('/', userController.getAllUsers); //verifyTokenAndAdmin,
+router.get('/', verifyTokenAndAdmin, userController.getAllUsers); //
 
 // user
 router.get('/me', verifyToken, userController.getUserById)
 
 //admin
-router.get('/:id', userController.getUserByIdAd) //verifyTokenAndAuthorization,
+router.get('/:id', verifyTokenAndAuthorization, userController.getUserByIdAd) //
 
 router.put('/:id/update', verifyTokenAndAuthorization, userController.updateUserById);
 
