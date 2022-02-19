@@ -1,15 +1,24 @@
 const jwt = require("jsonwebtoken");
+const User = require('../models/User');
 
-const verifyToken = (req, res, next) => {
+const verifyToken = async(req, res, next) => {
     const authHeader = req.headers["authorization"];
     if (authHeader) {
         const token = authHeader.split(' ')[1];
-        jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-            if (err) res.status(401).json({ err, message: "Unauthorized Access - No Token Provided!" });
-            req.user = user;
-            req.token = token;
-            next();
-        });
+        const data = jwt.verify(token, process.env.JWT_SECRET);
+
+        req.user = await User.findById(data.id);
+        console.log("req.user:", req.user)
+        next();
+
+        // , (err, user) => {
+        //     if (err) res.status(401).json({ err, message: "Unauthorized Access - No Token Provided!" });
+        //     console.log(user);
+        //     req.user = user;
+        //     console.log(req.user);
+        //     req.token = token;
+        //     next();
+        // }
     } else {
         return res.status(401).json({
             success: false,
@@ -25,7 +34,7 @@ const verifyTokenAndAuthorization = (req, res, next) => {
         } else {
             res.status(401).json({
                 success: false,
-                message: "You are not alowed to do that!",
+                message: "You are not alowed to do that! Please login!",
             });
         }
     });
@@ -38,7 +47,7 @@ const verifyTokenAndAdmin = (req, res, next) => {
         } else {
             res.status(401).json({
                 success: false,
-                message: "You are not alowed to do that!",
+                message: "You are not alowed to do that! You must be Admin!",
             });
         }
     });

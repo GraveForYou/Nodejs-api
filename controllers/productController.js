@@ -17,10 +17,22 @@ class ProductController {
 
     // [GET] api/products/
     async getAllProducts(req, res, next) {
-
         const productDeletedCount = await Product.countDocumentsDeleted();
+        const resultPerPage = parseInt(req.query.limit || 5);
+        const currentPage = parseInt(req.query.page || 1);
+        const skip = resultPerPage * (currentPage - 1);
 
-        const products = await Product.find();
+        const searchQuery = req.query.keyword ? {
+            name: {
+                $regex: req.query.keyword,
+                $options: "i"
+            }
+        } : {};
+        console.log("searchQuery:", searchQuery);
+        console.log(req.query)
+        const products = await Product.find(searchQuery)
+            .limit(resultPerPage)
+            .skip(skip)
         if (typeof products === 'Array' && products.length === 0) {
             res.status(200).json({
                 success: false,
@@ -29,10 +41,19 @@ class ProductController {
                 message: 'All products have been soft deleted'
             });
         }
+
+        const totalDocuments = await Product.countDocuments();
+        const totalPage = Math.ceil(totalDocuments / resultPerPage);
         res.status(200).json({
             success: true,
             productDeletedCount,
             products,
+            meta: {
+                currentPage,
+                resultPerPage,
+                totalDocuments,
+                totalPage,
+            }
         });
     }
 
@@ -53,7 +74,7 @@ class ProductController {
         });
     });
 
-    // [PUT] api/products/:id
+    // [PUT] api/products/:id/update --> admin
     updateProduct = catchAsyncErrors(async(req, res, next) => {
 
         let product = await Product.findById(req.params.id);
@@ -76,7 +97,7 @@ class ProductController {
 
         let product = await Product.findById(req.params.id);
         if (!product) {
-            return res.status(500).json({
+            return res.status(404).json({
                 success: false,
                 message: 'Product not found!',
             });

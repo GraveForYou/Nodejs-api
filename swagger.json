@@ -8,6 +8,7 @@
             "name": "MIT",
             "url": "https://opensource.org/licenses/MIT"
         }
+
     },
     "schemes": ["http"],
     "servers": [{
@@ -28,56 +29,8 @@
     ],
     "consumes": ["application/json", "application/xml"],
     "produces": ["application/json", "application/xml"],
-    "components": {
-        "securitySchemes": {
-            "bearerAuth": {
-                "type": "apiKey",
-                "scheme": "bearer",
-                "name": "authorization",
-                "in": "header",
-                "bearerFormat": "JWT"
-            }
-        }
-    },
-    "security": [{
-        "bearerAuth": []
-    }],
+
     "paths": {
-        "/api/users": {
-            "get": {
-                "tags": ["Users"],
-                "summary": "Get all users in system",
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "$ref": "#/definitions/Users"
-                                }
-                            },
-                            "application/xml": {
-                                "schema": {
-                                    "$ref": "#/definitions/Users"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid username supplied",
-                        "content": {}
-                    },
-                    "404": {
-                        "description": "User not found",
-                        "content": {}
-                    }
-                },
-                "security": [{
-                    "bearerAuth": []
-                }]
-            }
-        },
         "/api/auth/register": {
             "post": {
                 "tags": ["Users"],
@@ -125,12 +78,12 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/definitions/User"
+                                    "$ref": "#/components/schemas/User"
                                 }
                             },
                             "application/xml": {
                                 "schema": {
-                                    "$ref": "#/definitions/User"
+                                    "$ref": "#/components/schemas/User"
                                 }
                             }
                         }
@@ -169,18 +122,89 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/definitions/User"
+                                    "$ref": "#/components/schemas/User"
                                 }
                             },
                             "application/xml": {
                                 "schema": {
-                                    "$ref": "#/definitions/User"
+                                    "$ref": "#/components/schemas/User"
                                 }
                             }
                         }
 
                     }
                 }
+            }
+        },
+        "/api/users": {
+            "get": {
+                "tags": ["Users"],
+                "summary": "Get all users in system",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            },
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid username supplied",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {}
+                    }
+                },
+                "security": [{
+                    "bearerAuth": []
+                }]
+            }
+        },
+        "/api/users/me": {
+            "get": {
+                "tags": ["Users"],
+                "summary": "users get their own information",
+                "description": "returns the user's own information",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": " Invalid ID supplied",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {}
+                    }
+                },
+                "security": [{
+                    "bearerAuth": []
+                }]
             }
         },
         "/api/users/{id}": {
@@ -204,12 +228,12 @@
                         "content": {
                             "application/xml": {
                                 "schema": {
-                                    "$ref": "#/definitions/User"
+                                    "$ref": "#/components/schemas/User"
                                 }
                             },
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/definitions/User"
+                                    "$ref": "#/components/schemas/User"
                                 }
                             }
                         }
@@ -227,41 +251,641 @@
                     "bearerAuth": []
                 }]
             }
-        }
-    },
-    "definitions": {
-        "User": {
-            "required": ["name", "email", "password", "role"],
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "uniqueItems": true
-                },
-                "name": {
-                    "type": "string"
-                },
-                "avatar": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "url": {
-                                "type": "string"
+        },
+        "/api/users/me/update": {
+            "put": {
+                "tags": ["Users"],
+                "summary": "Update user By id with user login",
+                "description": "Update user by user login",
+                "requestBody": {
+                    "description": "Enter information to update user !",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "avatar": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "url": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "role": {
+                                        "type": "string"
+                                    }
+                                }
                             }
                         }
                     }
                 },
-                "role": {
-                    "type": "string"
+                "responses": {
+                    "200": {
+                        "description": "update user successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            },
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Use aren't authentication!",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {}
+                    }
                 },
-                "token": {
-                    "type": "string"
+                "security": [{
+                    "bearerAuth": []
+                }]
+
+            }
+        },
+        "/api/users/{id}/update": {
+            "put": {
+                "tags": ["Users"],
+                "summary": "Update user By id (admin)",
+                "description": "Update user by id (admin)",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "Id of the user to update",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "requestBody": {
+                    "description": "Enter information to update user with above Id!",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "avatar": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "url": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "role": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "update user successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            },
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "description: Invalid ID supplied",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {}
+                    }
+                },
+                "security": [{
+                    "bearerAuth": []
+                }]
+
+            }
+        },
+        "/api/products": {
+            "get": {
+                "tags": ["Products"],
+                "summary": "Get all products",
+                "parameters": [{
+                        "name": "page",
+                        "in": "query",
+                        "description": "page number to return",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "keyword to search product name",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "$ref": "#/components/Products"
+                                }
+                            },
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/Products"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request!",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "Product not found",
+                        "content": {}
+                    }
                 }
+            }
+        },
+        "/api/products/{id}": {
+            "get": {
+                "tags": ["Products"],
+                "summary": "Get Product By id",
+                "description": "Get Product by id",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "Id of the Product to get",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+
+                "responses": {
+                    "200": {
+                        "description": "get product successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            },
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request!",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Unauthorized!",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "product not found",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/products/new": {
+            "post": {
+                "tags": ["Products"],
+                "description": "Create new product in system",
+                "requestBody": {
+                    "name": "product",
+                    "in": "body",
+                    "description": "Product that we want to create",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Product"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created a new product",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            },
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [{
+                    "bearerAuth": []
+                }]
+            }
+        },
+        "/api/products/{id}/update": {
+            "put": {
+                "tags": ["Products"],
+                "summary": "Update Product By id (admin)",
+                "description": "Update Product by id (admin)",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "Id of the Product to update",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "requestBody": {
+                    "description": "Enter information to update product with above Id!",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Product"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "update product successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            },
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "description: Invalid ID supplied",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Unauthorized!",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "product not found",
+                        "content": {}
+                    }
+                },
+                "security": [{
+                    "bearerAuth": []
+                }]
+
+            }
+        },
+        "/api/products/trashes": {
+            "get": {
+                "tags": ["Products"],
+                "summary": "Get products has been soft deleted",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "$ref": "#/components/Products"
+                                }
+                            },
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/Products"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request!",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "Product not found",
+                        "content": {}
+                    }
+                },
+                "security": [{
+                    "bearerAuth": []
+                }]
+            }
+        },
+        "/api/products/{id}/soft": {
+            "delete": {
+                "tags": ["Products"],
+                "summary": "soft delete product by id (admin)",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "Id of the Product to soft delete!",
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            },
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request!",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Unauthorized!",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "Product not found",
+                        "content": {}
+                    }
+                },
+                "security": [{
+                    "bearerAuth": []
+                }]
+            }
+        },
+        "/api/products/trashes/{id}/force": {
+            "delete": {
+                "tags": ["Products"],
+                "summary": "force delete product by id (admin)",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "Id of the Product to force delete!",
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            },
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request!",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Unauthorized!",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "Product not found",
+                        "content": {}
+                    }
+                },
+                "security": [{
+                    "bearerAuth": []
+                }]
+            }
+        },
+        "/api/products/trashes/{id}/restore": {
+            "patch": {
+                "tags": ["Products"],
+                "summary": "restore product by id (admin)",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "Id of the Product to restore!",
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            },
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request!",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Unauthorized!",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "Product not found",
+                        "content": {}
+                    }
+                },
+                "security": [{
+                    "bearerAuth": []
+                }]
+            }
+        }
+    },
+    "_comment": ",/api/trashes/{id}/restore",
+    "components": {
+        "schemas": {
+            "User": {
+                "required": ["name", "email", "password", "role"],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "uniqueItems": true
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "avatar": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "url": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "role": {
+                        "type": "string"
+                    },
+                    "token": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Product": {
+                "required": ["name", "description", "price", "category"],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "trim": true
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number",
+                        "maxLength": 9
+                    },
+                    "images": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "url": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "category": {
+                        "type": "string"
+                    },
+                    "stock": {
+                        "type": "number",
+                        "default": 10
+                    },
+                    "genders": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "properties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "colors": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "properties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "sizes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "properties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "description": "Bearer <token>",
+                "type": "apiKey",
+                "name": "authorization",
+                "in": "header",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
             }
         },
         "Users": {
             "type": "array",
-            "$ref": "#/definitions/User"
+            "$ref": "#/components/schemas/User"
+        },
+        "Products": {
+            "type": "array",
+            "$ref": "#/components/schemas/Product"
         }
     }
 }

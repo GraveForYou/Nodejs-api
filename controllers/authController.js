@@ -1,6 +1,7 @@
 const ErrorHandler = require('../utils/errorhandler');
 const User = require('../models/User');
 const catchAsyncErrors = require('../middleware/catchAsyncErrors');
+const jwt = require('jsonwebtoken');
 class AuthController {
 
     //[POST] /api/auth/register
@@ -56,6 +57,21 @@ class AuthController {
             success: true,
             user,
         });
+    }
+
+    // [GET] /api/users/logout
+    async logout(req, res, next) {
+        // const user = req.user
+        // console.log(user);
+        // const authHeader = req.headers.authorization;
+        // if (authHeader) {
+        //     const token = authHeader.split(' ')[1];
+        //     jwt.destroy(token);
+        // }
+        // res.status(200).json({
+        //     success: true,
+        //     message: 'Logout successful!'
+        // })
     }
 
 }
