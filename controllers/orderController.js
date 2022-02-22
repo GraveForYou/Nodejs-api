@@ -212,6 +212,7 @@ async function updateStock(id, quantity) {
     console.log("product.stock before:", product.stock)
     product.stock -= quantity;
     console.log("product.stock after:", product.stock)
+
     await product.save({ validateBeforeSave: false });
 }
 module.exports = new OrderController;
