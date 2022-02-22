@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin } = require('../middleware/authenticate');
+const { verifyToken, verifyTokenAndAuthorization, verifyTokenAdmin } = require('../middleware/authenticate');
 const userController = require('../controllers/userController');
 
 // Get all users --> admin
-router.get('/', verifyTokenAndAdmin, userController.getAllUsers); //
+router.get('/', verifyTokenAdmin, userController.getAllUsers); //
 
 // get user information login --> user
 router.get('/me', verifyToken, userController.getUserById)
@@ -16,10 +16,10 @@ router.put('/me/update', verifyToken, userController.updateUserByIdUser);
 router.get('/:id', verifyTokenAndAuthorization, userController.getUserByIdAd) //
 
 // update user by id --> admin
-router.put('/:id/update', verifyTokenAndAdmin, userController.updateUserByIdAdmin);
+router.put('/:id/update', verifyTokenAdmin, userController.updateUserByIdAdmin);
 
 // delete user by id --> admin
-router.delete('/:id/destroy', verifyTokenAndAdmin, userController.destroyUserById);
+router.delete('/:id/destroy', verifyTokenAdmin, userController.destroyUserById);
 
 
 module.exports = router;

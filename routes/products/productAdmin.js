@@ -1,28 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const productAdminController = require('../../controllers/productController');
-const { verifyTokenAndAdmin } = require('../../middleware/authenticate');
+const { verifyTokenAdmin } = require('../../middleware/authenticate');
 
 
 // Get all trash products -- Admin
-
-
-router.get('/trashes', verifyTokenAndAdmin, productAdminController.getTrashProduct) //verifyTokenAndAdmin ---v
+router.get('/trashes', verifyTokenAdmin, productAdminController.getTrashProduct) //verifyTokenAdmin ---v
 
 // Create product -- Admin
-
-router.post('/new', verifyTokenAndAdmin, productAdminController.createProduct); //verifyTokenAndAdmin ---v
+router.post('/new', verifyTokenAdmin, productAdminController.createProduct); //verifyTokenAdmin ---v
 
 // Update product -- Admin
-router.put('/:id/update', verifyTokenAndAdmin, productAdminController.updateProduct); //verifyTokenAndAdmin ---v
+router.put('/:id/update', verifyTokenAdmin, productAdminController.updateProduct); //verifyTokenAdmin ---v
 
 // (Soft) Delete product -- Admin
-router.delete('/:id/soft', verifyTokenAndAdmin, productAdminController.softDelete); //verifyTokenAndAdmin ---v
+router.delete('/:id/soft', verifyTokenAdmin, productAdminController.softDelete); //verifyTokenAdmin ---v
 
 // Force Delete product -- Admin
-router.delete('/trashes/:id/force', verifyTokenAndAdmin, productAdminController.forceDelete); //verifyTokenAndAdmin ---v
+router.delete('/trashes/:id/force', verifyTokenAdmin, productAdminController.forceDelete); //verifyTokenAdmin ---v
 
 // Restore product -- Admin
-router.patch('/trashes/:id/restore', verifyTokenAndAdmin, productAdminController.restoreProduct); //verifyTokenAndAdmin ---v
+router.patch('/trashes/:id/restore', verifyTokenAdmin, productAdminController.restoreProduct); //verifyTokenAdmin ---v
 
 module.exports = router;

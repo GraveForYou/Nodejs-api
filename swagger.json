@@ -25,6 +25,10 @@
         {
             "name": "Products",
             "description": "API for products in the system"
+        },
+        {
+            "name": "Orders",
+            "description": "API for Orders in the system"
         }
     ],
     "consumes": ["application/json", "application/xml"],
@@ -105,10 +109,12 @@
                                 "required": ["email", "password"],
                                 "properties": {
                                     "email": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "haianh@gmail.com"
                                     },
                                     "password": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "123"
                                     }
                                 }
                             }
@@ -140,6 +146,23 @@
             "get": {
                 "tags": ["Users"],
                 "summary": "Get all users in system",
+                "parameters": [{
+                        "name": "page",
+                        "in": "query",
+                        "description": "page number to return",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "search product name",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "successful operation",
@@ -399,6 +422,54 @@
 
             }
         },
+        "/api/users/{id}/destroy": {
+            "delete": {
+                "tags": ["Users"],
+                "summary": "Delete user by ID",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID of user to delete",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "description: Invalid ID supplied",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Unauthorized!",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {}
+                    }
+                },
+                "security": [{
+                    "bearerAuth": []
+                }]
+            }
+        },
         "/api/products": {
             "get": {
                 "tags": ["Products"],
@@ -412,9 +483,9 @@
                         }
                     },
                     {
-                        "name": "keyword",
+                        "name": "name",
                         "in": "query",
-                        "description": "keyword to search product name",
+                        "description": "name to search product name",
                         "schema": {
                             "type": "string"
                         }
@@ -598,6 +669,23 @@
             "get": {
                 "tags": ["Products"],
                 "summary": "Get products has been soft deleted",
+                "parameters": [{
+                        "name": "page",
+                        "in": "query",
+                        "description": "page number to return",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name to search product name",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "produces": ["application/json"],
                 "responses": {
                     "200": {
@@ -773,9 +861,361 @@
                     "bearerAuth": []
                 }]
             }
+        },
+        "/api/orders/newOrder": {
+            "post": {
+                "tags": ["Orders"],
+                "description": "Create new product in system",
+                "requestBody": {
+                    "name": "Order",
+                    "in": "body",
+                    "description": "Order that we want to create",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "shipping_info": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "address": {
+                                                    "type": "string",
+                                                    "example": "Chuong My"
+                                                },
+                                                "city": {
+                                                    "type": "string",
+                                                    "example": "Ha Noi"
+                                                },
+                                                "phoneNumber": {
+                                                    "type": "number",
+                                                    "default": "0123456789"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "orderItems": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "product": {
+                                                    "type": "string",
+                                                    "example": "61dfe049e07276382098f50e"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "product2"
+                                                },
+                                                "price": {
+                                                    "type": "number",
+                                                    "example": "22000"
+                                                },
+                                                "quantity": {
+                                                    "type": "number",
+                                                    "example": "2"
+                                                },
+                                                "image": {
+                                                    "type": "string",
+                                                    "example": "image2-1"
+                                                },
+                                                "size": {
+                                                    "type": "string",
+                                                    "example": "40"
+                                                },
+                                                "color": {
+                                                    "type": "string",
+                                                    "example": "white"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "paymentMethod": {
+                                        "type": "string",
+                                        "default": "Payment on delivery"
+                                    },
+                                    "taxPrice": {
+                                        "type": "number",
+                                        "default": "1000"
+                                    },
+                                    "shippingPrice": {
+                                        "type": "number",
+                                        "default": "20000"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created a new order",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Order"
+                                }
+                            },
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Order"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request!"
+                    },
+                    "401": {
+                        "description": "Unauthorized!"
+                    }
+                },
+                "security": [{
+                    "bearerAuth": []
+                }]
+            }
+        },
+        "/api/orders": {
+            "get": {
+                "tags": ["Orders"],
+                "summary": "Find all orders",
+                "description": "Get all orders",
+                "parameters": [{
+                    "name": "orderStatus",
+                    "in": "query",
+                    "description": "find order by orderStatus",
+                    "style": "form",
+                    "explode": true,
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "default": "Processing",
+                            "enum": ["Processing", "Confirmed", "Shipping", "Delivered"]
+                        }
+                    }
+                }, {
+                    "name": "page",
+                    "in": "query",
+                    "description": "page number to return",
+                    "schema": {
+                        "type": "number"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "get all Orders successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Order"
+                                }
+                            },
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Order"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request!",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Unauthorized!",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "Order not found",
+                        "content": {}
+                    }
+                },
+                "security": [{
+                    "bearerAuth": []
+                }]
+            }
+        },
+        "/api/orders/me": {
+            "get": {
+                "tags": ["Orders"],
+                "summary": "Find all orders of user login",
+                "description": "Get all orders of user login",
+                "parameters": [{
+                    "name": "orderStatus",
+                    "in": "query",
+                    "description": "find order by orderStatus",
+                    "style": "form",
+                    "explode": true,
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "default": "Processing",
+                            "enum": ["Processing", "Confirmed", "Shipping", "Delivered"]
+                        }
+                    }
+                }, {
+                    "name": "page",
+                    "in": "query",
+                    "description": "page number to return",
+                    "schema": {
+                        "type": "number"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "get all Orders successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/Orders"
+                                }
+                            },
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/Orders"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request!",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Unauthorized!",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "Order not found",
+                        "content": {}
+                    }
+                },
+                "security": [{
+                    "bearerAuth": []
+                }]
+            }
+        },
+        "/api/orders/{id}": {
+            "get": {
+                "tags": ["Orders"],
+                "summary": "Find order by id",
+                "description": "Ge order by id",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "Id of the Order to get",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "get Order successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Order"
+                                }
+                            },
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Order"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request!",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Unauthorized!",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "Order not found",
+                        "content": {}
+                    }
+                },
+                "security": [{
+                    "bearerAuth": []
+                }]
+            }
+        },
+        "/api/orders/{id}/updateOrderStatus": {
+            "put": {
+                "tags": ["Orders"],
+                "summary": "Update Order status By id (admin)",
+                "description": "Update Order status by id (admin)",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "Id of the Order to update status",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "requestBody": {
+                    "description": "Enter information to update Order status with above Id!",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "orderStatus": {
+                                        "type": "array",
+                                        "example": "Processing",
+                                        "enum": ["Processing", "Confirmed", "Shipping", "Delivered"]
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "update Order status successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Order"
+                                }
+                            },
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Order"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "description: Invalid ID supplied",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Unauthorized!",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "product not found",
+                        "content": {}
+                    }
+                },
+                "security": [{
+                    "bearerAuth": []
+                }]
+
+            }
         }
     },
-    "_comment": ",/api/trashes/{id}/restore",
     "components": {
         "schemas": {
             "User": {
@@ -835,6 +1275,10 @@
                     "category": {
                         "type": "string"
                     },
+                    "user": {
+                        "type": "string",
+                        "ref": "#/components/User"
+                    },
                     "stock": {
                         "type": "number",
                         "default": 10
@@ -867,6 +1311,95 @@
                         }
                     }
                 }
+            },
+            "Order": {
+                "properties": {
+                    "shipping_info": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "address": {
+                                    "type": "string"
+                                },
+                                "city": {
+                                    "type": "string"
+                                },
+                                "phoneNumber": {
+                                    "type": "number",
+                                    "default": "0123456789"
+                                }
+                            }
+                        }
+                    },
+                    "orderItems": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "price": {
+                                    "type": "number"
+                                },
+                                "quantity": {
+                                    "type": "number"
+                                },
+                                "image": {
+                                    "type": "string"
+                                },
+                                "size": {
+                                    "type": "string"
+                                },
+                                "color": {
+                                    "type": "string"
+                                },
+                                "product": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "user": {
+                        "type": "string"
+                    },
+                    "paymentMethod": {
+                        "type": "string",
+                        "default": "Payment on delivery"
+                    },
+                    "itemsPrice": {
+                        "type": "number"
+                    },
+                    "taxPrice": {
+                        "type": "number"
+                    },
+                    "shippingPrice": {
+                        "type": "number"
+                    },
+                    "totalPrice": {
+                        "type": "number"
+                    },
+                    "orderStatus": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "pattern": "^\\d{3}-\\d{2}-\\d{4}$"
+                    },
+                    "expected_deliveredAt": {
+                        "type": "string",
+                        "pattern": "^\\d{3}-\\d{2}-\\d{4}$"
+                    },
+                    "canceledAt": {
+                        "type": "string",
+                        "pattern": "^\\d{3}-\\d{2}-\\d{4}$"
+                    },
+                    "deliveredAt": {
+                        "type": "string",
+                        "pattern": "^\\d{3}-\\d{2}-\\d{4}$"
+                    }
+                }
             }
         },
         "securitySchemes": {
@@ -886,6 +1419,16 @@
         "Products": {
             "type": "array",
             "$ref": "#/components/schemas/Product"
+        },
+        "Orders": {
+            "type": "array",
+            "$ref": "#/components/schemas/Order"
+        },
+        "orderStatus": {
+            "type": "string",
+            "description": "Order Status",
+            "example": "Shipping",
+            "enum": ["Processing", "Confirmed", "Shipping", "Delivered"]
         }
     }
 }

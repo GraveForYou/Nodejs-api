@@ -53,7 +53,13 @@ class AuthController {
         const token = user.generateJWT();
         user.token = token;
 
-        res.status(200).json({
+        const options = {
+            expires: new Date(
+                Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000
+            ),
+            httpOnly: true,
+        };
+        res.status(200).cookie('token', token, options).json({
             success: true,
             user,
         });
@@ -61,17 +67,24 @@ class AuthController {
 
     // [GET] /api/users/logout
     async logout(req, res, next) {
-        // const user = req.user
-        // console.log(user);
-        // const authHeader = req.headers.authorization;
-        // if (authHeader) {
-        //     const token = authHeader.split(' ')[1];
-        //     jwt.destroy(token);
-        // }
+
+        // const user = req.user;
+
+        // const user = await User.findOne({ id: req.user.id });
+        // console.log("user logout:", user);
+        // console.log("token:", req.token)
+        // req.token = null;
+        // console.log("token:", req.token)
+
+        // res.cookie('token', null, {
+        //     expiresIn: new Date(Date.now()),
+        //     httpOnly: true,
+        // });
+
         // res.status(200).json({
         //     success: true,
-        //     message: 'Logout successful!'
-        // })
+        //     message: "Logged Out",
+        // });
     }
 
 }

@@ -6,7 +6,7 @@ class ProductController {
 
     // [POST] api/products/new
     async createProduct(req, res, next) {
-
+        req.body.user = req.user.id;
         const product = await Product.create(req.body);
 
         res.status(201).json({
@@ -48,7 +48,7 @@ class ProductController {
             success: true,
             productDeletedCount,
             products,
-            meta: {
+            data: {
                 currentPage,
                 resultPerPage,
                 totalDocuments,
@@ -61,12 +61,12 @@ class ProductController {
     getProductById = catchAsyncErrors(async(req, res, next) => {
 
         let product = await Product.findById(req.params.id);
-        // if (!product) {
-        //     return res.status(500).json({
-        //         success: false,
-        //         message: 'Product not found (getbyid)!!',
-        //     });
-        // };
+        if (!product) {
+            return res.status(400).json({
+                success: false,
+                message: 'Product not found !!',
+            });
+        };
 
         res.status(200).json({
             success: true,
@@ -135,7 +135,21 @@ class ProductController {
     //[GET] api/products/trashes
     getTrashProduct = catchAsyncErrors(async(req, res, next) => {
 
-        const productsDelete = await Product.findDeleted();
+        const resultPerPage = parseInt(req.query.limit || 5);
+        const currentPage = parseInt(req.query.page || 1);
+        const skip = resultPerPage * (currentPage - 1);
+
+        const searchQuery = req.query.keyword ? {
+            name: {
+                $regex: req.query.keyword,
+                $options: "i"
+            }
+        } : {};
+        console.log("searchQuery:", searchQuery);
+
+        const productsDelete = await Product.findDeleted(searchQuery)
+            .limit(resultPerPage)
+            .skip(skip);
 
         if (!productsDelete || productsDelete.length === 0) {
             res.status(500).json({
@@ -143,10 +157,18 @@ class ProductController {
                 message: 'No products have been deleted!!!'
             });
         }
+        const totalDocuments = productsDelete.length;
+        const totalPage = Math.ceil(totalDocuments / resultPerPage);
+
         res.status(200).json({
             success: true,
             productsDelete,
-            // message: 'This products soft delete'
+            data: {
+                currentPage,
+                resultPerPage,
+                totalDocuments,
+                totalPage,
+            }
         });
     });
 

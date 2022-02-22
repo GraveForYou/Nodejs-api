@@ -5,12 +5,33 @@ class UserController {
 
     //[GET] /api/users/
     async getAllUsers(req, res, next) {
-        const users = await User.find();
 
+        const resultPerPage = parseInt(req.query.limit || 5);
+        const currentPage = parseInt(req.query.page || 1);
+        const skip = resultPerPage * (currentPage - 1);
+
+        const searchQuery = req.query.name ? {
+            name: {
+                $regex: req.query.name,
+                $options: "i"
+            }
+        } : {};
+        console.log("searchQuery:", searchQuery);
+        console.log(req.query)
+        const users = await User.find(searchQuery)
+            .limit(resultPerPage)
+            .skip(skip)
+        const totalDocuments = await User.countDocuments();
+        const totalPage = Math.ceil(totalDocuments / resultPerPage);
         res.status(200).json({
             success: true,
             users,
-            message: 'All users have been not deleted'
+            data: {
+                currentPage,
+                resultPerPage,
+                totalDocuments,
+                totalPage,
+            },
         });
     }
 
@@ -51,7 +72,7 @@ class UserController {
         const id = req.params.id;
         const userId = req.user.id;
         console.log("update request:", req.user)
-        if (!userId) return next(new ErrorHandler("Please Login!!!", 400))
+        if (!userId) return next(new ErrorHandler("Please Login!!!", 401))
 
         const user = await User.findByIdAndUpdate(id, { $set: update }, { new: true });
 
@@ -68,11 +89,10 @@ class UserController {
     // [PUT] /api/users/me/update
     async updateUserByIdUser(req, res, next) {
         const update = req.body;
-        // const id = req.params.id;
         console.log("update request:", req.user)
         const userId = req.user.id;
         console.log(userId);
-        if (!userId) return next(new ErrorHandler("Please Login!!!", 400))
+        if (!userId) return next(new ErrorHandler("Please Login!!!", 401))
 
 
         const user = await User.findByIdAndUpdate(userId, { $set: update }, { new: true });
@@ -90,13 +110,6 @@ class UserController {
     // [DELETE] /api/users/{id}
     async destroyUserById(req, res, next) {
         const id = req.params.id;
-        // const user_id = req.user.id;
-
-        //Make sure the passed id is that of the logged in user
-        // if (user_id.toString() !== id.toString()) return res.status(401).json({
-        //     success: false,
-        //     message: "Sorry, you don't have the permission to delete this data.",
-        // });
 
         const user = await User.findByIdAndDelete(id);
         res.status(200).json({
