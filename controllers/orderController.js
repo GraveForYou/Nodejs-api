@@ -10,7 +10,6 @@ class OrderController {
             shipping_info,
             orderItems,
             paymentMethod,
-            // itemsPrice,
             taxPrice,
             shippingPrice,
         } = req.body;
@@ -86,8 +85,6 @@ class OrderController {
                 totalPage,
             }
         })
-
-
     }
 
     // [GET] /api/orders/me --> user
@@ -159,10 +156,7 @@ class OrderController {
         if (!order) {
             return next(new ErrorHandler("Order not found with this id", 404));
         }
-        var result
         const orderStatusUpdate = req.body.orderStatus;
-
-        console.log(orderStatusUpdate)
 
         if (order.orderStatus === orderStatusUpdate) {
             res.status(400).json({
@@ -176,9 +170,7 @@ class OrderController {
         if (orderStatusUpdate === "Shipping") {
             console.log("order.orderItems:", order.orderItems)
                 // order.orderItems.forEach(async(ord) => {
-                //     console.log("ord:", ord)
-                //     result = await updateStock(ord.product, ord.quantity);
-                //     console.log("result:", result);
+                //     await updateStock(ord.product, ord.quantity);
 
             // });
             for (var item of order.orderItems) {
@@ -208,11 +200,16 @@ class OrderController {
 async function updateStock(id, quantity) {
     const product = await Product.findById(id);
     console.log("id:", id)
-    console.log("quantity:", quantity)
-    console.log("product.stock before:", product.stock)
-    product.stock -= quantity;
-    console.log("product.stock after:", product.stock)
+    if (!product) return next(new ErrorHandler("Order not found with this id", 404));
 
+    if (product.stock < quantity) {
+        res.status(403).json({
+            success: false,
+            message: `Quantity is out of range (stock:${product.stock})`
+
+        })
+    }
+    product.stock -= quantity;
     await product.save({ validateBeforeSave: false });
 }
 module.exports = new OrderController;
