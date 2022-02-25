@@ -932,6 +932,9 @@
                                             }
                                         }
                                     },
+                                    "note": {
+                                        "type": "string"
+                                    },
                                     "paymentMethod": {
                                         "type": "string",
                                         "default": "Payment on delivery"
@@ -1364,6 +1367,9 @@
                     "user": {
                         "type": "string"
                     },
+                    "note": {
+                        "type": "string"
+                    },
                     "paymentMethod": {
                         "type": "string",
                         "default": "Payment on delivery"
@@ -1391,9 +1397,12 @@
                         "type": "string",
                         "pattern": "^\\d{3}-\\d{2}-\\d{4}$"
                     },
-                    "canceledAt": {
+                    "cancelledAt": {
                         "type": "string",
                         "pattern": "^\\d{3}-\\d{2}-\\d{4}$"
+                    },
+                    "cancelled_reason": {
+                        "type": "string"
                     },
                     "deliveredAt": {
                         "type": "string",

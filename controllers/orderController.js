@@ -11,9 +11,10 @@ class OrderController {
             orderItems,
             paymentMethod,
             taxPrice,
+
             shippingPrice,
         } = req.body;
-
+        let note = req.body.note
         if (!req.user.id) {
             res.status(400).json({
                 success: false,
@@ -23,6 +24,9 @@ class OrderController {
         var itemsPrice = orderItems.reduce((prices, item) => {
             return prices += item.price * item.quantity;
         }, 0)
+        if (!note) {
+            note = '';
+        }
         console.log(itemsPrice)
         var totalPrice = itemsPrice + taxPrice + shippingPrice;
         console.log(taxPrice)
@@ -33,6 +37,7 @@ class OrderController {
         const order = await Order.create({
             shipping_info,
             orderItems,
+            note,
             paymentMethod,
             itemsPrice,
             taxPrice,

@@ -49,6 +49,9 @@ const OrderSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
+    note: {
+        type: String
+    },
     paymentMethod: {
         type: String,
         required: true,
@@ -64,6 +67,7 @@ const OrderSchema = new mongoose.Schema({
         required: true,
         default: 1000,
     },
+
     shippingPrice: {
         type: Number,
         required: true,
@@ -86,8 +90,14 @@ const OrderSchema = new mongoose.Schema({
     expected_deliveredAt: {
         type: Date,
     },
-    canceledAt: {
+    cancelledAt: {
         type: Date,
+    },
+    cancelled_reason: {
+        type: String,
+    },
+    paidAt: {
+        type: Date
     },
     deliveredAt: {
         type: Date,
