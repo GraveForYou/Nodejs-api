@@ -11,7 +11,6 @@ const verifyToken = async(req, res, next) => {
         req.token = token;
         console.log("req.user:", req.user)
         console.log("token:", token);
-        1
         next();
     } else {
         return res.status(401).json({

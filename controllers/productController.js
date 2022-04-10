@@ -1,7 +1,7 @@
 const Product = require('../models/Product');
 const catchAsyncErrors = require('../middleware/catchAsyncErrors');
 const ErrorHandler = require('../utils/errorhandler');
-
+const ApiFeature = require("../utils/apiFeature");
 class ProductController {
 
     // [POST] api/products/new
@@ -18,21 +18,27 @@ class ProductController {
     // [GET] api/products/
     async getAllProducts(req, res, next) {
         const productDeletedCount = await Product.countDocumentsDeleted();
-        const resultPerPage = parseInt(req.query.limit || 5);
-        const currentPage = parseInt(req.query.page || 1);
-        const skip = resultPerPage * (currentPage - 1);
+        // const limit = parseInt(req.query.limit || 5);
+        // const page = parseInt(req.query.page || 1);
+        // const skip = limit * (page - 1);
 
-        const searchQuery = req.query.keyword ? {
-            name: {
-                $regex: req.query.keyword,
-                $options: "i"
-            }
-        } : {};
-        console.log("searchQuery:", searchQuery);
-        console.log(req.query)
-        const products = await Product.find(searchQuery)
-            .limit(resultPerPage)
-            .skip(skip)
+        // const searchQuery = req.query.keyword ? {
+        //     name: {
+        //         $regex: req.query.keyword,
+        //         $options: "i"
+        //     }
+        // } : {};
+        // console.log("searchQuery:", searchQuery);
+        // console.log(req.query)
+        // const products = await Product.find(searchQuery)
+        //     .limit(limit)
+        //     .skip(skip)
+        const apiFeature = new ApiFeature(Product.find(), req.query)
+            .search()
+            .filter()
+            .pagination(3)
+        console.log("apiFeature.query:", apiFeature.query);
+        let products = await apiFeature.query;
         if (typeof products === 'Array' && products.length === 0) {
             res.status(200).json({
                 success: false,
@@ -43,17 +49,17 @@ class ProductController {
         }
 
         const totalDocuments = await Product.countDocuments();
-        const totalPage = Math.ceil(totalDocuments / resultPerPage);
+        // const totalPage = Math.ceil(totalDocuments / limit);
         res.status(200).json({
             success: true,
             productDeletedCount,
             products,
-            data: {
-                currentPage,
-                resultPerPage,
-                totalDocuments,
-                totalPage,
-            }
+            // data: {
+            //     page,
+            //     limit,
+            //     totalDocuments,
+            //     totalPage,
+            // }
         });
     }
 
@@ -135,9 +141,9 @@ class ProductController {
     //[GET] api/products/trashes
     getTrashProduct = catchAsyncErrors(async(req, res, next) => {
 
-        const resultPerPage = parseInt(req.query.limit || 5);
-        const currentPage = parseInt(req.query.page || 1);
-        const skip = resultPerPage * (currentPage - 1);
+        const limit = parseInt(req.query.limit || 5);
+        const page = parseInt(req.query.page || 1);
+        const skip = limit * (page - 1);
 
         const searchQuery = req.query.keyword ? {
             name: {
@@ -148,7 +154,7 @@ class ProductController {
         console.log("searchQuery:", searchQuery);
 
         const productsDelete = await Product.findDeleted(searchQuery)
-            .limit(resultPerPage)
+            .limit(limit)
             .skip(skip);
 
         if (!productsDelete || productsDelete.length === 0) {
@@ -158,14 +164,14 @@ class ProductController {
             });
         }
         const totalDocuments = productsDelete.length;
-        const totalPage = Math.ceil(totalDocuments / resultPerPage);
+        const totalPage = Math.ceil(totalDocuments / limit);
 
         res.status(200).json({
             success: true,
             productsDelete,
             data: {
-                currentPage,
-                resultPerPage,
+                page,
+                limit,
                 totalDocuments,
                 totalPage,
             }

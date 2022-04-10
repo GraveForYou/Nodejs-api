@@ -56,9 +56,9 @@ class OrderController {
     // [GET] /api/orders --> admin
     async getAllOrders(req, res, next) {
         const ordersCount = await Order.countDocuments()
-        const resultPerPage = parseInt(req.query.limit || 5);
-        const currentPage = parseInt(req.query.page || 1);
-        const skip = resultPerPage * (currentPage - 1);
+        const limit = parseInt(req.query.limit || 5);
+        const page = parseInt(req.query.page || 1);
+        const skip = limit * (page - 1);
 
         const options = req.query.orderStatus ? {
             orderStatus: {
@@ -67,7 +67,7 @@ class OrderController {
             }
         } : {};
         const orders = await Order.find(options)
-            .limit(resultPerPage)
+            .limit(limit)
             .skip(skip)
         if (!req.user.role) return next(new ErrorHandler("you not allowed to get all orders!!!", 401));
 
@@ -78,14 +78,14 @@ class OrderController {
             })
         }
         const totalDocuments = await Order.countDocuments();
-        const totalPage = Math.ceil(totalDocuments / resultPerPage);
+        const totalPage = Math.ceil(totalDocuments / limit);
         res.status(200).json({
             success: true,
             ordersCount,
             orders,
             data: {
-                currentPage,
-                resultPerPage,
+                page,
+                limit,
                 totalDocuments,
                 totalPage,
             }
@@ -95,9 +95,9 @@ class OrderController {
     // [GET] /api/orders/me --> user
     async getMyOrders(req, res, next) {
 
-        const resultPerPage = parseInt(req.query.limit || 5);
-        const currentPage = parseInt(req.query.page || 1);
-        const skip = resultPerPage * (currentPage - 1);
+        const limit = parseInt(req.query.limit || 5);
+        const page = parseInt(req.query.page || 1);
+        const skip = limit * (page - 1);
 
         let user = req.user;
         if (!user) {
@@ -115,19 +115,19 @@ class OrderController {
         } : { user: user.id };
 
         const orders = await Order.find(options)
-            .limit(resultPerPage)
+            .limit(limit)
             .skip(skip)
         console.log(orders);
         const orderCount = orders.length;
         const totalDocuments = await Order.countDocuments();
-        const totalPage = Math.ceil(totalDocuments / resultPerPage);
+        const totalPage = Math.ceil(totalDocuments / limit);
         res.status(200).json({
             success: true,
             orderCount,
             orders,
             data: {
-                currentPage,
-                resultPerPage,
+                page,
+                limit,
                 totalDocuments,
                 totalPage,
             }

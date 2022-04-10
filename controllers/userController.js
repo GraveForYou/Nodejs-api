@@ -6,10 +6,12 @@ class UserController {
     //[GET] /api/users/
     async getAllUsers(req, res, next) {
 
-        const resultPerPage = parseInt(req.query.limit || 5);
-        const currentPage = parseInt(req.query.page || 1);
-        const skip = resultPerPage * (currentPage - 1);
-
+        const limit = parseInt(req.query.limit || 5);
+        const page = parseInt(req.query.page || 1);
+        const skip = limit * (page - 1);
+        const today = new Date();
+        const expirationDate = new Date(today);
+        expirationDate.setDate(today.getDate() + 1);
         const searchQuery = req.query.name ? {
             name: {
                 $regex: req.query.name,
@@ -18,17 +20,18 @@ class UserController {
         } : {};
         console.log("searchQuery:", searchQuery);
         console.log(req.query)
+        console.log(parseInt(expirationDate.getTime() / 1000, 10))
         const users = await User.find(searchQuery)
-            .limit(resultPerPage)
+            .limit(limit)
             .skip(skip)
         const totalDocuments = await User.countDocuments();
-        const totalPage = Math.ceil(totalDocuments / resultPerPage);
+        const totalPage = Math.ceil(totalDocuments / limit);
         res.status(200).json({
             success: true,
             users,
             data: {
-                currentPage,
-                resultPerPage,
+                page,
+                limit,
                 totalDocuments,
                 totalPage,
             },
