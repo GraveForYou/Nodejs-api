@@ -8,17 +8,18 @@
             "name": "MIT",
             "url": "https://opensource.org/licenses/MIT"
         }
-
     },
     "schemes": ["http"],
-    "servers": [{
+    "servers": [
+        {
             "url": "http://localhost:3002/"
         },
         {
             "url": "http://localhost:3002/swagger/"
         }
     ],
-    "tags": [{
+    "tags": [
+        {
             "name": "Users",
             "description": "API for users in the system"
         },
@@ -48,7 +49,12 @@
                         "application/json": {
                             "schema": {
                                 "type": "object",
-                                "required": ["name", "email", "password", "role"],
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "role"
+                                ],
                                 "properties": {
                                     "name": {
                                         "type": "string"
@@ -74,7 +80,6 @@
                             }
                         }
                     }
-
                 },
                 "responses": {
                     "201": {
@@ -119,7 +124,6 @@
                                 }
                             }
                         }
-
                     }
                 },
                 "responses": {
@@ -137,7 +141,6 @@
                                 }
                             }
                         }
-
                     }
                 }
             }
@@ -146,7 +149,8 @@
             "get": {
                 "tags": ["Users"],
                 "summary": "Get all users in system",
-                "parameters": [{
+                "parameters": [
+                    {
                         "name": "page",
                         "in": "query",
                         "description": "page number to return",
@@ -189,9 +193,11 @@
                         "content": {}
                     }
                 },
-                "security": [{
-                    "bearerAuth": []
-                }]
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/users/me": {
@@ -225,9 +231,11 @@
                         "content": {}
                     }
                 },
-                "security": [{
-                    "bearerAuth": []
-                }]
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/users/{id}": {
@@ -235,15 +243,17 @@
                 "tags": ["Users"],
                 "summary": "Find user by ID",
                 "description": "Returns a single user",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "ID of user to return",
-                    "required": true,
-                    "schema": {
-                        "type": "string"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of user to return",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
-                }],
+                ],
                 "produces": ["application/json"],
                 "responses": {
                     "200": {
@@ -270,9 +280,11 @@
                         "content": {}
                     }
                 },
-                "security": [{
-                    "bearerAuth": []
-                }]
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/users/me/update": {
@@ -338,10 +350,11 @@
                         "content": {}
                     }
                 },
-                "security": [{
-                    "bearerAuth": []
-                }]
-
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/users/{id}/update": {
@@ -349,15 +362,17 @@
                 "tags": ["Users"],
                 "summary": "Update user By id (admin)",
                 "description": "Update user by id (admin)",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "Id of the user to update",
-                    "required": true,
-                    "schema": {
-                        "type": "string"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id of the user to update",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
-                }],
+                ],
                 "requestBody": {
                     "description": "Enter information to update user with above Id!",
                     "required": true,
@@ -416,25 +431,28 @@
                         "content": {}
                     }
                 },
-                "security": [{
-                    "bearerAuth": []
-                }]
-
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/users/{id}/destroy": {
             "delete": {
                 "tags": ["Users"],
                 "summary": "Delete user by ID",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "ID of user to delete",
-                    "required": true,
-                    "schema": {
-                        "type": "string"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of user to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
-                }],
+                ],
                 "produces": ["application/json"],
                 "responses": {
                     "200": {
@@ -465,16 +483,19 @@
                         "content": {}
                     }
                 },
-                "security": [{
-                    "bearerAuth": []
-                }]
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/products": {
             "get": {
                 "tags": ["Products"],
                 "summary": "Get all products",
-                "parameters": [{
+                "parameters": [
+                    {
                         "name": "page",
                         "in": "query",
                         "description": "page number to return",
@@ -525,15 +546,17 @@
                 "tags": ["Products"],
                 "summary": "Get Product By id",
                 "description": "Get Product by id",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "Id of the Product to get",
-                    "required": true,
-                    "schema": {
-                        "type": "string"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id of the Product to get",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
-                }],
+                ],
 
                 "responses": {
                     "200": {
@@ -600,9 +623,11 @@
                         }
                     }
                 },
-                "security": [{
-                    "bearerAuth": []
-                }]
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/products/{id}/update": {
@@ -610,15 +635,17 @@
                 "tags": ["Products"],
                 "summary": "Update Product By id (admin)",
                 "description": "Update Product by id (admin)",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "Id of the Product to update",
-                    "required": true,
-                    "schema": {
-                        "type": "string"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id of the Product to update",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
-                }],
+                ],
                 "requestBody": {
                     "description": "Enter information to update product with above Id!",
                     "required": true,
@@ -659,17 +686,19 @@
                         "content": {}
                     }
                 },
-                "security": [{
-                    "bearerAuth": []
-                }]
-
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/products/trashes": {
             "get": {
                 "tags": ["Products"],
                 "summary": "Get products has been soft deleted",
-                "parameters": [{
+                "parameters": [
+                    {
                         "name": "page",
                         "in": "query",
                         "description": "page number to return",
@@ -713,9 +742,11 @@
                         "content": {}
                     }
                 },
-                "security": [{
-                    "bearerAuth": []
-                }]
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/products/{id}/soft": {
@@ -723,15 +754,17 @@
                 "tags": ["Products"],
                 "summary": "soft delete product by id (admin)",
                 "produces": ["application/json"],
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "required": true,
-                    "description": "Id of the Product to soft delete!",
-                    "schema": {
-                        "type": "string"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id of the Product to soft delete!",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
-                }],
+                ],
                 "responses": {
                     "200": {
                         "description": "successful operation",
@@ -761,9 +794,11 @@
                         "content": {}
                     }
                 },
-                "security": [{
-                    "bearerAuth": []
-                }]
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/products/trashes/{id}/force": {
@@ -771,15 +806,17 @@
                 "tags": ["Products"],
                 "summary": "force delete product by id (admin)",
                 "produces": ["application/json"],
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "required": true,
-                    "description": "Id of the Product to force delete!",
-                    "schema": {
-                        "type": "string"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id of the Product to force delete!",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
-                }],
+                ],
                 "responses": {
                     "200": {
                         "description": "successful operation",
@@ -809,9 +846,11 @@
                         "content": {}
                     }
                 },
-                "security": [{
-                    "bearerAuth": []
-                }]
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/products/trashes/{id}/restore": {
@@ -819,15 +858,17 @@
                 "tags": ["Products"],
                 "summary": "restore product by id (admin)",
                 "produces": ["application/json"],
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "required": true,
-                    "description": "Id of the Product to restore!",
-                    "schema": {
-                        "type": "string"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id of the Product to restore!",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
-                }],
+                ],
                 "responses": {
                     "200": {
                         "description": "successful operation",
@@ -857,9 +898,11 @@
                         "content": {}
                     }
                 },
-                "security": [{
-                    "bearerAuth": []
-                }]
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/orders/newOrder": {
@@ -975,9 +1018,11 @@
                         "description": "Unauthorized!"
                     }
                 },
-                "security": [{
-                    "bearerAuth": []
-                }]
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/orders": {
@@ -985,28 +1030,36 @@
                 "tags": ["Orders"],
                 "summary": "Find all orders",
                 "description": "Get all orders",
-                "parameters": [{
-                    "name": "orderStatus",
-                    "in": "query",
-                    "description": "find order by orderStatus",
-                    "style": "form",
-                    "explode": true,
-                    "schema": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "default": "Processing",
-                            "enum": ["Processing", "Confirmed", "Shipping", "Delivered"]
+                "parameters": [
+                    {
+                        "name": "orderStatus",
+                        "in": "query",
+                        "description": "find order by orderStatus",
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "default": "Processing",
+                                "enum": [
+                                    "Processing",
+                                    "Confirmed",
+                                    "Shipping",
+                                    "Delivered"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "page number to return",
+                        "schema": {
+                            "type": "number"
                         }
                     }
-                }, {
-                    "name": "page",
-                    "in": "query",
-                    "description": "page number to return",
-                    "schema": {
-                        "type": "number"
-                    }
-                }],
+                ],
                 "responses": {
                     "200": {
                         "description": "get all Orders successful",
@@ -1036,9 +1089,11 @@
                         "content": {}
                     }
                 },
-                "security": [{
-                    "bearerAuth": []
-                }]
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/orders/me": {
@@ -1046,28 +1101,36 @@
                 "tags": ["Orders"],
                 "summary": "Find all orders of user login",
                 "description": "Get all orders of user login",
-                "parameters": [{
-                    "name": "orderStatus",
-                    "in": "query",
-                    "description": "find order by orderStatus",
-                    "style": "form",
-                    "explode": true,
-                    "schema": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "default": "Processing",
-                            "enum": ["Processing", "Confirmed", "Shipping", "Delivered"]
+                "parameters": [
+                    {
+                        "name": "orderStatus",
+                        "in": "query",
+                        "description": "find order by orderStatus",
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "default": "Processing",
+                                "enum": [
+                                    "Processing",
+                                    "Confirmed",
+                                    "Shipping",
+                                    "Delivered"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "page number to return",
+                        "schema": {
+                            "type": "number"
                         }
                     }
-                }, {
-                    "name": "page",
-                    "in": "query",
-                    "description": "page number to return",
-                    "schema": {
-                        "type": "number"
-                    }
-                }],
+                ],
                 "responses": {
                     "200": {
                         "description": "get all Orders successful",
@@ -1097,9 +1160,11 @@
                         "content": {}
                     }
                 },
-                "security": [{
-                    "bearerAuth": []
-                }]
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/orders/{id}": {
@@ -1107,15 +1172,17 @@
                 "tags": ["Orders"],
                 "summary": "Find order by id",
                 "description": "Ge order by id",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "Id of the Order to get",
-                    "required": true,
-                    "schema": {
-                        "type": "string"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id of the Order to get",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
-                }],
+                ],
                 "responses": {
                     "200": {
                         "description": "get Order successful",
@@ -1145,9 +1212,11 @@
                         "content": {}
                     }
                 },
-                "security": [{
-                    "bearerAuth": []
-                }]
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/orders/{id}/updateOrderStatus": {
@@ -1155,15 +1224,17 @@
                 "tags": ["Orders"],
                 "summary": "Update Order status By id (admin)",
                 "description": "Update Order status by id (admin)",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "Id of the Order to update status",
-                    "required": true,
-                    "schema": {
-                        "type": "string"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id of the Order to update status",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
-                }],
+                ],
                 "requestBody": {
                     "description": "Enter information to update Order status with above Id!",
                     "required": true,
@@ -1175,10 +1246,14 @@
                                     "orderStatus": {
                                         "type": "array",
                                         "example": "Processing",
-                                        "enum": ["Processing", "Confirmed", "Shipping", "Delivered"]
+                                        "enum": [
+                                            "Processing",
+                                            "Confirmed",
+                                            "Shipping",
+                                            "Delivered"
+                                        ]
                                     }
                                 }
-
                             }
                         }
                     }
@@ -1212,10 +1287,11 @@
                         "content": {}
                     }
                 },
-                "security": [{
-                    "bearerAuth": []
-                }]
-
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         }
     },

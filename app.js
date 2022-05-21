@@ -1,43 +1,40 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-require('dotenv').config();
-const bodyParser = require('body-parser');
+var createError = require('http-errors')
+var express = require('express')
+var path = require('path')
+var cookieParser = require('cookie-parser')
+var logger = require('morgan')
+require('dotenv').config()
+const bodyParser = require('body-parser')
 require('./config/database')
-const cors = require('cors');
-const passport = require("passport");
-var app = express();
-const port = process.env.PORT || 3003;
+const cors = require('cors')
+const passport = require('passport')
+var app = express()
+const port = process.env.PORT || 3001
 const route = require('./routes')
-const swaggerDocument = require('./swagger.json');
-const swaggerJSDoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json')
+const swaggerJSDoc = require('swagger-jsdoc')
+const swaggerUi = require('swagger-ui-express')
 
 // view engine setup
-app.use(logger('dev'));
-app.use(express.json());
+app.use(logger('dev'))
+app.use(express.json())
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser())
+app.use(express.static(path.join(__dirname, 'public')))
 
-app.use(cors());
-
+app.use(cors())
 //Route init
 
-route(app);
+route(app)
 
-
-app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 app.listen(port, () =>
     console.log(`Example app listening at http://localhost:${port}`)
 )
-
 
 // // catch 404 and forward to error handler
 // app.use(function(req, res, next) {
@@ -55,4 +52,4 @@ app.listen(port, () =>
 //     res.render('error');
 // });
 
-module.exports = app;
+module.exports = app
